@@ -1,6 +1,12 @@
 """CPS 310 Recipe & Meal Planner starter application."""
 
-from recipe_utils import filter_by_category, load_config, load_recipes, search_by_name
+from recipe_utils import (
+    filter_by_category,
+    load_config,
+    load_recipes,
+    search_by_ingredient,
+    search_by_name,
+)
 
 
 def display_recipe(recipe):
@@ -60,6 +66,7 @@ def main():
         print("3. Filter recipes by category")
         print("4. View recipe details")
         print("5. Exit")
+        print("6. Search recipes by ingredient")
 
         choice = input("\nChoose an option: ").strip()
 
@@ -76,8 +83,11 @@ def main():
         elif choice == "5":
             print("Goodbye!")
             break
+        elif choice == "6":
+            ingredient = input("Enter ingredient: ")
+            list_recipes(search_by_ingredient(recipes, ingredient))
         else:
-            print("Invalid option. Please choose 1-5.")
+            print("Invalid option. Please choose 1-6.")
 
 
 if __name__ == "__main__":
