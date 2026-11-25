@@ -1,7 +1,7 @@
-# CPS 310 Final Project Starter
+# CPS 310 Final Project
 ## Recipe & Meal Planner
 
-This repository contains the starter code for the CPS 310 final project.
+This repository contains the work in progress code for the CPS 310 final project.
 
 The application currently supports:
 
@@ -12,7 +12,14 @@ The application currently supports:
 - viewing recipe details
 - loading basic configuration from `config.json`
 
-This is intentionally a **starter project**, not a finished application.
+This is not a finished application.
+
+### In Progress
+
+- search by ingredient
+- assign recipes to certain days of the week
+- generate a grocery list
+- pytest test cases for the above
 
 ## Setup
 
@@ -47,5 +54,3 @@ python -m pytest -v
 ```bash
 python3 -m pytest -v
 ```
-
-You are expected to make your own design decisions as you extend the project during the final project.
