@@ -8,6 +8,7 @@ The application currently supports:
 - loading recipe data from JSON
 - listing all recipes
 - searching recipes by name
+- searching recipes by ingredient (case-insensitive partial matches)
 - filtering recipes by category
 - viewing recipe details
 - loading basic configuration from `config.json`
@@ -16,7 +17,6 @@ This is not a finished application.
 
 ### In Progress
 
-- search by ingredient
 - assign recipes to certain days of the week
 - generate a grocery list
 - pytest test cases for the above

@@ -2,7 +2,13 @@
 
 import json
 
-from recipe_utils import filter_by_category, load_config, load_recipes, search_by_name
+from recipe_utils import (
+    filter_by_category,
+    load_config,
+    load_recipes,
+    search_by_ingredient,
+    search_by_name,
+)
 
 
 def test_search_by_name_finds_partial_match():
@@ -26,6 +32,38 @@ def test_search_by_name_is_case_insensitive():
 def test_search_by_name_returns_empty_list_when_no_match():
     recipes = [{"name": "Chicken Alfredo", "category": "Dinner"}]
     assert search_by_name(recipes, "pizza") == []
+
+
+def test_search_by_ingredient_finds_partial_matches_case_insensitively():
+    recipes = [
+        {
+            "name": "Cheese Omelet",
+            "ingredients": [{"name": "Cheddar cheese"}, {"name": "parmesan cheese"}],
+        },
+        {"name": "Berry Smoothie", "ingredients": [{"name": "berries"}]},
+        {"name": "Tomato Pasta", "ingredients": [{"name": "parmesan cheese"}]},
+    ]
+    assert search_by_ingredient(recipes, "  ChEeSe  ") == [recipes[0], recipes[2]]
+
+
+def test_search_by_ingredient_ignores_recipe_names_and_units():
+    recipes = [
+        {
+            "name": "Yogurt Cups",
+            "ingredients": [{"name": "greek yogurt", "quantity": 1, "unit": "cup"}],
+        }
+    ]
+    assert search_by_ingredient(recipes, "cup") == []
+
+
+def test_search_by_ingredient_skips_recipes_without_ingredients():
+    recipes = [{"name": "Fruit Salad", "ingredients": []}, {"name": "Toast"}]
+    assert search_by_ingredient(recipes, "bread") == []
+
+
+def test_search_by_ingredient_returns_empty_list_for_blank_term():
+    recipes = [{"name": "Berry Smoothie", "ingredients": [{"name": "berries"}]}]
+    assert search_by_ingredient(recipes, "  ") == []
 
 
 def test_filter_by_category_returns_matching_recipes():
