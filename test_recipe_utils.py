@@ -1,12 +1,14 @@
 """Tests for the Recipe & Meal Planner."""
 
 import json
+from decimal import Decimal
 
 import pytest
 
 from recipe_utils import (
     assign_recipe_to_day,
     filter_by_category,
+    generate_grocery_list,
     load_config,
     load_recipes,
     search_by_ingredient,
@@ -139,3 +141,40 @@ def test_assign_recipe_to_day_rejects_invalid_day():
         assign_recipe_to_day(meal_plan, "Funday", {"name": "Tomato Pasta"})
 
     assert meal_plan == {}
+
+
+def test_generate_grocery_list_totals_ingredients_by_name_and_unit():
+    taco_bowls = {
+        "ingredients": [
+            {"name": "black beans", "quantity": 1, "unit": "can"},
+            {"name": "salsa", "quantity": 0.1, "unit": "cups"},
+        ]
+    }
+    quesadillas = {
+        "ingredients": [
+            {"name": "Black Beans", "quantity": 1, "unit": "cup"},
+            {"name": " SALSA ", "quantity": 0.2, "unit": " CUP "},
+        ]
+    }
+    meal_plan = {"Monday": [taco_bowls], "Thursday": [quesadillas]}
+
+    assert generate_grocery_list(meal_plan) == [
+        {"name": "black beans", "quantity": 1, "unit": "can"},
+        {"name": "Black Beans", "quantity": 1, "unit": "cup"},
+        {"name": "salsa", "quantity": Decimal("0.3"), "unit": "cup"},
+    ]
+
+
+def test_generate_grocery_list_counts_each_assignment():
+    recipe = {"ingredients": [{"name": "basil", "quantity": 0.25, "unit": "cup"}]}
+    meal_plan = {"Monday": [recipe, recipe], "Friday": [recipe]}
+
+    assert generate_grocery_list(meal_plan) == [
+        {"name": "basil", "quantity": Decimal("0.75"), "unit": "cup"},
+    ]
+    assert recipe["ingredients"][0]["quantity"] == 0.25
+
+
+@pytest.mark.parametrize("meal_plan", [{}, {"Monday": [{"ingredients": []}]}])
+def test_generate_grocery_list_returns_empty_list_without_ingredients(meal_plan):
+    assert generate_grocery_list(meal_plan) == []

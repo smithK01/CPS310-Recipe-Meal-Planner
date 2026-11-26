@@ -1,6 +1,7 @@
 """Utility functions for the Recipe & Meal Planner."""
 
 import json
+from decimal import Decimal
 
 
 DAYS_OF_WEEK = (
@@ -12,6 +13,13 @@ DAYS_OF_WEEK = (
     "Saturday",
     "Sunday",
 )
+
+_UNIT_ALIASES = {
+    "cans": "can",
+    "cloves": "clove",
+    "cups": "cup",
+    "lbs": "lb",
+}
 
 
 def load_config(filename):
@@ -74,3 +82,22 @@ def assign_recipe_to_day(meal_plan, day, recipe):
     """Append a recipe to the given day in the weekly plan."""
     day = normalize_day_of_week(day)
     meal_plan.setdefault(day, []).append(recipe)
+
+
+def generate_grocery_list(meal_plan):
+    """Return ingredient totals for the weekly meal plan, sorted by name and unit."""
+    totals = {}
+    for recipes in meal_plan.values():
+        for recipe in recipes:
+            for ingredient in recipe.get("ingredients", []):
+                name = ingredient["name"].strip()
+                unit = ingredient["unit"].strip().casefold()
+                unit = _UNIT_ALIASES.get(unit, unit)
+                key = (name.casefold(), unit)
+                item = totals.setdefault(
+                    key,
+                    {"name": name, "quantity": Decimal(0), "unit": unit},
+                )
+                item["quantity"] += Decimal(str(ingredient["quantity"]))
+
+    return [totals[key] for key in sorted(totals)]

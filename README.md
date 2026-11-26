@@ -12,14 +12,10 @@ The application currently supports:
 - filtering recipes by category
 - viewing recipe details
 - assigning multiple recipes to each day and viewing the weekly meal plan during the current session
+- generating a grocery list with ingredient totals from the weekly meal plan
 - loading basic configuration from `config.json`
 
 This is not a finished application.
-
-### In Progress
-
-- generate a grocery list
-- pytest test cases for the above
 
 ## Setup
 
