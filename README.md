@@ -11,13 +11,13 @@ The application currently supports:
 - searching recipes by ingredient (case-insensitive partial matches)
 - filtering recipes by category
 - viewing recipe details
+- assigning multiple recipes to each day and viewing the weekly meal plan during the current session
 - loading basic configuration from `config.json`
 
 This is not a finished application.
 
 ### In Progress
 
-- assign recipes to certain days of the week
 - generate a grocery list
 - pytest test cases for the above
 

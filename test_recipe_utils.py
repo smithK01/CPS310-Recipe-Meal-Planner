@@ -1,8 +1,11 @@
-"""Tests for the starter Recipe & Meal Planner."""
+"""Tests for the Recipe & Meal Planner."""
 
 import json
 
+import pytest
+
 from recipe_utils import (
+    assign_recipe_to_day,
     filter_by_category,
     load_config,
     load_recipes,
@@ -117,3 +120,22 @@ def test_load_recipes_reads_json(tmp_path):
     ]
     recipe_file.write_text(json.dumps(sample), encoding="utf-8")
     assert load_recipes(recipe_file) == sample
+
+
+def test_assign_recipe_to_day_appends_to_normalized_day():
+    omelet = {"name": "Veggie Omelet"}
+    pasta = {"name": "Tomato Pasta"}
+    meal_plan = {"Monday": [omelet]}
+
+    assign_recipe_to_day(meal_plan, "  MONDAY  ", pasta)
+
+    assert meal_plan == {"Monday": [omelet, pasta]}
+
+
+def test_assign_recipe_to_day_rejects_invalid_day():
+    meal_plan = {}
+
+    with pytest.raises(ValueError, match="Invalid day"):
+        assign_recipe_to_day(meal_plan, "Funday", {"name": "Tomato Pasta"})
+
+    assert meal_plan == {}
