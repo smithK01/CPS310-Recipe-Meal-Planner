@@ -4,6 +4,7 @@ from recipe_utils import (
     DAYS_OF_WEEK,
     assign_recipe_to_day,
     filter_by_category,
+    generate_grocery_list,
     load_config,
     load_recipes,
     normalize_day_of_week,
@@ -89,6 +90,20 @@ def display_meal_plan(meal_plan):
         print(f"{day}: {recipe_names or 'No recipes assigned'}")
 
 
+def display_grocery_list(grocery_list):
+    """Display the ingredient quantities needed for the weekly plan."""
+    if not grocery_list:
+        print("\nNo ingredients in the weekly meal plan.")
+        return
+
+    print("\nGrocery List")
+    print("------------")
+    for ingredient in grocery_list:
+        quantity = ingredient["quantity"].normalize()
+        amount = f"{quantity:f} {ingredient['unit']}".rstrip()
+        print(f"- {amount} {ingredient['name']}")
+
+
 def main():
     """Run the starter Recipe & Meal Planner."""
     config = load_config("config.json")
@@ -105,7 +120,8 @@ def main():
         print("5. Search recipes by ingredient")
         print("6. Assign a recipe to a day")
         print("7. View weekly meal plan")
-        print("8. Exit")
+        print("8. Generate grocery list")
+        print("9. Exit")
 
         choice = input("\nChoose an option: ").strip()
 
@@ -127,10 +143,12 @@ def main():
         elif choice == "7":
             display_meal_plan(meal_plan)
         elif choice == "8":
+            display_grocery_list(generate_grocery_list(meal_plan))
+        elif choice == "9":
             print("Goodbye!")
             break
         else:
-            print("Invalid option. Please choose 1-8.")
+            print("Invalid option. Please choose 1-9.")
 
 
 if __name__ == "__main__":
